@@ -68,7 +68,7 @@ public class LocationPollerService extends Service {
 			throws InvalidParameterException {
 
 		assertValidParameters(intent);
-		getLock(context).acquire();
+		getLock(context.getApplicationContext()).acquire();
 
 		intent.setClass(context, LocationPollerService.class);
 
@@ -124,10 +124,16 @@ public class LocationPollerService extends Service {
    */
   @Override
   public int onStartCommand(Intent intent, int flags, int startId) {
+	  
+		PowerManager.WakeLock lock = getLock(this.getApplicationContext());
+		if (!lock.isHeld() || (flags & START_FLAG_REDELIVERY) != 0) {
+			lock.acquire();
+		}
+
 		LocationPollerParameter parameters = getParametersFromIntent(intent);
 
 
-		PollerThread pollerThread = new PollerThread(getLock(this), locationManager, parameters);
+		PollerThread pollerThread = new PollerThread(lock, locationManager, parameters);
 		pollerThread.start();
 
 		return (START_REDELIVER_INTENT);
