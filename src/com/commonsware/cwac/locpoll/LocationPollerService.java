@@ -153,7 +153,7 @@ public class LocationPollerService extends Service {
 		private Runnable onTimeout = new Runnable() {
 
 			public void run() {
-				locationManager.removeUpdates(mListener);
+				locationManager.removeUpdates(listener);
 				if (isTriedAllProviders()) {
 					broadCastFailureMessage();
 					quit();
@@ -164,7 +164,7 @@ public class LocationPollerService extends Service {
 			}
 		};
 
-    private LocationListener mListener = new LocationListener() {
+    private LocationListener listener = new LocationListener() {
       /**
        * If we get a fix, get rid of the timeout condition,
        * then attach the location as an extra
@@ -231,7 +231,7 @@ public class LocationPollerService extends Service {
 
 		private void tryNextProvider() {
 			handler.postDelayed(onTimeout, locationPollerParameter.getTimeout());
-			locationManager.requestLocationUpdates(getCurrentProvider(), 0, 0, mListener);
+			locationManager.requestLocationUpdates(getCurrentProvider(), 0, 0, listener);
 		}
 
 		private void broadCastFailureMessage() {
@@ -265,7 +265,7 @@ public class LocationPollerService extends Service {
      */
     @Override
     protected void onPostExecute() {
-      locationManager.removeUpdates(mListener);
+      locationManager.removeUpdates(listener);
 
       super.onPostExecute();
     }
