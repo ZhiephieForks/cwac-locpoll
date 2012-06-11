@@ -25,6 +25,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.PowerManager;
+import android.util.Log;
 
 /**
  * Service providing the guts of the location polling
@@ -231,7 +232,22 @@ public class LocationPollerService extends Service {
 
 		private void tryNextProvider() {
 			handler.postDelayed(onTimeout, locationPollerParameter.getTimeout());
-			locationManager.requestLocationUpdates(getCurrentProvider(), 0, 0, listener);
+			requestLocationUdpate();
+		}
+		
+		private void requestLocationUdpate() {
+			try {
+                locationManager.requestLocationUpdates(getCurrentProvider(), 0,
+                        0, listener);
+            }
+
+            catch (IllegalArgumentException e) {
+                // see http://code.google.com/p/android/issues/detail?id=21237
+                Log.w(getClass().getSimpleName(),
+                        "Exception requesting updates -- may be emulator issue",
+                        e);
+                quit();
+            }
 		}
 
 		private void broadCastFailureMessage() {
