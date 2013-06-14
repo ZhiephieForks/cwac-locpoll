@@ -19,6 +19,11 @@ This is available as a JAR file from the downloads area of this GitHub repo.
 The project itself is set up as an Android library project,
 in case you wish to use the source code in that fashion.
 
+Fused Location Provider
+------
+If you are targeting devices that have access to [Google Services](http://developer.android.com/google/index.html) it might be worth checking out the [Fused location provider](http://developer.android.com/google/play-services/location.html) before choosing to use this project.
+
+
 Usage
 -----
 First, you need to add the JAR or Android library project to
